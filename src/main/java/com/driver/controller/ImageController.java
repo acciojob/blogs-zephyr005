@@ -18,20 +18,26 @@ public class ImageController {
     public ResponseEntity<Image> createAndReturn(@RequestBody Blog blog,
                                                  @RequestParam String description,
                                                  @RequestParam String dimensions) {
-        Image image = imageService.createAndReturn(blog,description,dimensions);
+        Image image = imageService.createAndReturn(blog, description, dimensions);
         return new ResponseEntity<>(image, HttpStatus.CREATED);
     }
 
     @GetMapping("/countImagesInScreen/{id}/{screenDimensions}")
     public ResponseEntity<Integer> countImagesInScreen(@PathVariable int id, @PathVariable String screenDimensions){
         Image image = imageService.findById(id);
-        int count = imageService.countImagesInScreen(image,screenDimensions);
+        if(image == null) {
+            return new ResponseEntity<>(0, HttpStatus.NOT_FOUND);
+        }
+        int count = imageService.countImagesInScreen(image, screenDimensions);
         return new ResponseEntity<>(count, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteImage(@PathVariable int id) {
         Image image = imageService.findById(id);
+        if(image == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         imageService.deleteImage(image);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
