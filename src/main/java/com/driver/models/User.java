@@ -1,37 +1,39 @@
 package com.driver.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
+
 
 @Entity
 @Table(name = "user")
-
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     private String username;
-
     private String password;
-
     private String firstName;
-
     private String lastName;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Blog> blogList;
 
-    public User() {
+    public List<Blog> getBlogList() {
+        return blogList;
     }
 
-    public User(int id,String username, String password, String firstName, String lastName, List<Blog> blogList){
-
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public void setBlogList(List<Blog> blogList) {
         this.blogList = blogList;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -66,23 +68,4 @@ public class User {
         this.lastName = lastName;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public List<Blog> getBlogList() {
-        return blogList;
-    }
-
-    public void setBlogList(List<Blog> blogList) {
-        this.blogList = blogList;
-    }
-
-    // user is parent of blog with one to many relation
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-    private List<Blog> blogList;
 }
